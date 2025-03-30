@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { usePathname } from "next/navigation";
 import DisplayIcons from "@/components/DisplayIcons";
 
-import { Icon } from "@/types/types"
+import { Icon, IconAPI } from "@/types/types"
 export default function Results() {
   // get current path aka the query
   const pathname = usePathname();
@@ -19,12 +19,11 @@ export default function Results() {
         // insert query into api call
         const response = await (await fetch(`/api/getIconData?query=${encodeURIComponent(query)}`)).json()
 
-        console.log(response)
         // error check
         if (response.error) {
           setError(response.error)
         } else {
-          const filteredIcons = response.message.icons.map((icon: any) => ({
+          const filteredIcons = response.message.icons.map((icon: IconAPI) => ({
             // parse through until find each attribute within object
             icon_id: icon.icon_id,
             // might not have url of raster size 8
