@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react';
 import { usePathname } from "next/navigation";
+import DisplayIcons from "@/components/DisplayIcons";
 
 import { Icon } from "@/types/types"
 export default function Results() {
@@ -27,9 +28,7 @@ export default function Results() {
         icon_url: icon.raster_sizes[4].formats[0].preview_url,
       })
       )
-      console.log(filteredIcons)
-      //setIcons(response.message.icons)
-      // redirect user to the search results
+      setIcons(filteredIcons)
     }
     getIcons()
   }, [])
@@ -37,7 +36,8 @@ export default function Results() {
 
   return (
     <>
-      result
+      {/* display the icons */}
+      <DisplayIcons icons={icons} />
     </>
   )
 }

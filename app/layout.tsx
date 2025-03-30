@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import './globals.css'
+import Header from "@/components/universal/header"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,10 +13,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="flex flex-col items-center">
       <body
         className={`antialiased`}
       >
+        <Header />
         {children}
       </body>
     </html>
