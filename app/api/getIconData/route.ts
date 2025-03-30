@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
     // get query data
     const searchParams = request.nextUrl.searchParams;
     const query = searchParams.get('query');
-    console.log(query)
+
+    // call api
     const response = await fetch(`https://api.iconfinder.com/v4/icons/search?query=${query}&count=10`, {
       method: 'GET',
       headers: {
