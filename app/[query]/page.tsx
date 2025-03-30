@@ -10,25 +10,34 @@ export default function Results() {
   // parse it
   const query = decodeURIComponent(pathname.substring(1));
   const [icons, setIcons] = useState<Icon[]>([]);
+  const [error, setError] = useState<string>('');
 
   // load icons once
   useEffect(() => {
     async function getIcons() {
-      // insert query into api call
-      const response = await (await fetch(`/api/getIconData?query=${encodeURIComponent(query)}`)).json()
+      try {
+        // insert query into api call
+        const response = await (await fetch(`/api/getIconData?query=${encodeURIComponent(query)}`)).json()
 
-      console.log(response)
-      // error check
-
-
-
-      const filteredIcons = response.message.icons.map((icon: any) => ({
-        icon_id: icon.icon_id,
-        // parse through until find the url
-        icon_url: icon.raster_sizes[4].formats[0].preview_url,
-      })
-      )
-      setIcons(filteredIcons)
+        console.log(response)
+        // error check
+        if (response.error) {
+          setError(response.error)
+        } else {
+          const filteredIcons = response.message.icons.map((icon: any) => ({
+            // parse through until find each attribute within object
+            icon_id: icon.icon_id,
+            // might not have url of raster size 8
+            icon_url: icon.raster_sizes[8]?.formats[0].preview_url ? icon.raster_sizes[8].formats[0].preview_url : null,
+            // might not have tags
+            tags: icon.tags?.[0] ? icon.tags : [],
+          })
+          )
+          setIcons(filteredIcons)
+        }
+      } catch (e) {
+        console.log("Error trying to fetch API: ", e)
+      }
     }
     getIcons()
   }, [])
@@ -36,8 +45,13 @@ export default function Results() {
 
   return (
     <>
-      {/* display the icons */}
-      <DisplayIcons icons={icons} />
+      {/* display the icons if no error fetching from API*/}
+      {error ? (
+        <h3>{error}</h3>
+      ) : (
+        <DisplayIcons icons={icons} />
+      )}
+
     </>
   )
 }
